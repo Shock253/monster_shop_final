@@ -18,13 +18,23 @@ RSpec.describe OrderItem do
       @order_2 = @user.orders.create!
       @order_item_1 = @order_1.order_items.create!(item: @ogre, price: @ogre.price, quantity: 2)
       @order_item_2 = @order_1.order_items.create!(item: @hippo, price: @hippo.price, quantity: 3)
-      @order_item_3 = @order_2.order_items.create!(item: @hippo, price: @hippo.price, quantity: 27)
+      @order_item_3 = @order_2.order_items.create!(item: @hippo, price: @hippo.price, quantity: 15)
+      @order_item_4 = @order_2.order_items.create!(item: @giant, price: @giant.price, quantity: 27)
+    end
+
+    it ".applicable_discount" do
+
     end
 
     it '.subtotal' do
       expect(@order_item_1.subtotal).to eq(40.5)
       expect(@order_item_2.subtotal).to eq(150)
-      expect(@order_item_3.subtotal).to eq(1350)
+
+      @brian.discounts.create!(name: "Party Size Discount", percent: 10, threshold: 10)
+      @brian.discounts.create!(name: "Shipping Order Discount", percent: 15, threshold: 20)
+
+      expect(@order_item_3.subtotal).to eq(675)
+      expect(@order_item_4.subtotal).to eq(1147.5)
     end
 
     it '.fulfillable?' do
