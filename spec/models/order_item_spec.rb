@@ -22,10 +22,6 @@ RSpec.describe OrderItem do
       @order_item_4 = @order_2.order_items.create!(item: @giant, price: @giant.price, quantity: 27)
     end
 
-    it ".applicable_discount" do
-
-    end
-
     it '.subtotal' do
       expect(@order_item_1.subtotal).to eq(40.5)
       expect(@order_item_2.subtotal).to eq(150)
