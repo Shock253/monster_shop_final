@@ -43,12 +43,13 @@ RSpec.describe "Bulk discount index page" do
       end
 
       it "if I put in invalid information into the form, I get a flash message telling me what went wrong" do
-        visit "/merchant/discounts/new"
+        discount1 = @merchant_1.discounts.create!(name: "Family size discount", threshold: 10, percent: 10)
+        visit "/merchant/discounts/#{discount1.id}/edit"
 
         fill_in 'Percent', with: "300"
         fill_in 'Threshold', with: "yeet"
-        click_button 'Create Discount'
-        expect(current_path).to eq("/merchant/discounts")
+        click_button 'Update Discount'
+        expect(current_path).to eq("/merchant/discounts/#{discount1.id}/edit")
 
 
         expect(page).to have_content("percent: [\"must be less than 100\"]")
