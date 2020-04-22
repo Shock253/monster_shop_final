@@ -41,6 +41,18 @@ RSpec.describe Merchant do
       expect(@sal.item_count).to eq(0)
     end
 
+    it '.applicable_discount' do
+      discount_1 = @brian.discounts.create!(name: "Party Size Discount", percent: 10, threshold: 10)
+      discount_2 = @brian.discounts.create!(name: "Shipping Order Discount", percent: 15, threshold: 20)
+
+      expect(@brian.applicable_discount(7)).to eq(nil)
+      expect(@brian.applicable_discount(10)).to eq(discount_1)
+      expect(@brian.applicable_discount(14)).to eq(discount_1)
+      expect(@brian.applicable_discount(20)).to eq(discount_2)
+      expect(@brian.applicable_discount(27)).to eq(discount_2)
+    end
+
+
     it '.average_item_price' do
       expect(@megan.average_item_price.round(2)).to eq(35.13)
       expect(@brian.average_item_price.round(2)).to eq(50.00)
