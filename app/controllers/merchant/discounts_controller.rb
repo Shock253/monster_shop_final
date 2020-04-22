@@ -20,6 +20,10 @@ class Merchant::DiscountsController < ApplicationController
     end
   end
 
+  def edit
+    @discount = Discount.find(params[:id])
+  end
+
 
   private
 
