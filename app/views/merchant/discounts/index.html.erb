@@ -1,4 +1,5 @@
 <h1>Discounts</h1>
+<%= link_to "New Bulk Discount", "/merchant/discounts/new" %>
 
 <% if @discounts.empty? %>
   <h2>No current bulk discounts</h2>
@@ -6,7 +7,7 @@
   <% @discounts.each do |discount| %>
     <section id="discount-<%= discount.id %>">
       <h2><%= link_to discount.name, "/merchant/discounts/#{discount.id}" %></h2>
-      <p>Discount Percentage: <%= (discount.percent * 100.0).round(2) %>%</p>
+      <p>Discount Percentage: <%= discount.percent %>%</p>
       <p>Discount Threshold: <%= discount.threshold %></p>
     </section>
   <% end %>
