@@ -130,7 +130,7 @@ RSpec.describe "Bulk discount index page" do
         visit '/merchant/discounts'
 
         within "#discount-#{discount1.id}" do
-          click_button 'Delete'
+          click_button 'Delete Discount'
         end
 
         expect(current_path).to eq('/merchant/discounts')
