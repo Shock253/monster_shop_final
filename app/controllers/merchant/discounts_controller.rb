@@ -16,7 +16,7 @@ class Merchant::DiscountsController < ApplicationController
       redirect_to "/merchant/discounts"
     else
       generate_flash(discount)
-      render :new
+      redirect_to "/merchant/discounts/new"
     end
   end
 
@@ -30,7 +30,7 @@ class Merchant::DiscountsController < ApplicationController
       redirect_to "/merchant/discounts"
     else
       generate_flash(@discount)
-      render :edit
+      redirect_to "/merchant/discounts/#{params[:id]}/edit"
     end
   end
 
