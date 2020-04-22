@@ -15,6 +15,10 @@ class Merchant < ApplicationRecord
     items.count
   end
 
+  def applicable_discount(quantity)
+    discounts.where("threshold <= ?", quantity).last
+  end
+
   def average_item_price
     items.average(:price)
   end
