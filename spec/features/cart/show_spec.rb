@@ -9,6 +9,13 @@ RSpec.describe 'Cart Show Page' do
       @ogre = @megan.items.create!(name: 'Ogre', description: "I'm an Ogre!", price: 20, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 5 )
       @giant = @megan.items.create!(name: 'Giant', description: "I'm a Giant!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 3 )
       @hippo = @brian.items.create!(name: 'Hippo', description: "I'm a Hippo!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', active: true, inventory: 3 )
+      @gremlin = @brian.items.create!(
+        name: 'Gremlin',
+        description: "Don't feed me after midnight!",
+        price: 50,
+        image: 'https://cnet3.cbsistatic.com/img/WNE8g6NQlu1ZYaeP3wQAQPyZbUI=/1200x675/2017/05/11/b5c80061-817c-47e1-ade2-d54d57b71c0b/poll80srebootgremlins.jpg',
+        active: true,
+        inventory: 50)
     end
 
     describe 'I can see my cart' do
@@ -167,6 +174,30 @@ RSpec.describe 'Cart Show Page' do
         expect(page).to_not have_content("#{@hippo.name}")
         expect(page).to have_content("Cart: 0")
       end
+
+      it "if I add enough items in my cart to reach the threshold of a discount,
+      I see that discount next to the price on the order" do
+        discount1 = @brian.discounts.create!(name: "Family size discount", threshold: 10, percent: 10)
+        discount2 = @brian.discounts.create!(name: "Shipping supply discount", threshold: 500, percent: 20)
+
+        10.times do
+          visit item_path(@gremlin)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@gremlin.id}" do
+          discounted_percent = (100.0 - discount1.percent)/100.0
+          expect(page).to have_content("Subtotal: $#{(@gremlin.price * 10 * discounted_percent)}0 (-#{discount1.percent}%)")
+        end
+      end
     end
   end
 end
+
+# **User Story 6: Shopping Cart Display**
+# - As a Regular user
+# - When I add enough items to my cart to cross that merchant's threshold for a discount
+# - I see a new subtotal price under the item
+# - And I see a number showing the difference in price with the discount's percentage

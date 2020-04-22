@@ -114,7 +114,7 @@ RSpec.describe "Bulk discount index page" do
         expect(current_path).to eq('/merchant/discounts/new')
       end
 
-      it 'I can link to create a new discount from the discount index' do
+      it 'I can link to edit an existing discount from the discount index' do
         discount1 = @merchant_1.discounts.create!(name: "Family size discount", threshold: 10, percent: 10)
         visit '/merchant/discounts'
 
@@ -123,6 +123,23 @@ RSpec.describe "Bulk discount index page" do
         end
 
         expect(current_path).to eq("/merchant/discounts/#{discount1.id}/edit")
+      end
+
+      it 'I can delete discounts' do
+        discount1 = @merchant_1.discounts.create!(name: "Family size discount", threshold: 10, percent: 10)
+        visit '/merchant/discounts'
+
+        within "#discount-#{discount1.id}" do
+          click_button 'Delete Discount'
+        end
+
+        expect(current_path).to eq('/merchant/discounts')
+
+        @merchant_user.reload
+
+        visit '/merchant/discounts'
+
+        expect(page).to_not have_css("#discount-#{discount1.id}")
       end
     end
   end

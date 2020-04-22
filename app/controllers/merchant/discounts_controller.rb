@@ -16,7 +16,7 @@ class Merchant::DiscountsController < ApplicationController
       redirect_to "/merchant/discounts"
     else
       generate_flash(discount)
-      render :new
+      redirect_to "/merchant/discounts/new"
     end
   end
 
@@ -30,13 +30,19 @@ class Merchant::DiscountsController < ApplicationController
       redirect_to "/merchant/discounts"
     else
       generate_flash(@discount)
-      render :edit
+      redirect_to "/merchant/discounts/#{params[:id]}/edit"
     end
+  end
+
+  def destroy
+    item = Discount.find(params[:id])
+    item.destroy
+    redirect_to "/merchant/discounts"
   end
 
   private
 
   def discount_params
-    permitted_params = params.permit(:name, :threshold, :percent)
+    params.permit(:name, :threshold, :percent)
   end
 end

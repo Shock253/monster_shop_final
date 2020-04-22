@@ -57,7 +57,7 @@ RSpec.describe "Bulk discount creation" do
         fill_in 'Percent', with: "300"
         fill_in 'Threshold', with: "yeet"
         click_button 'Create Discount'
-        expect(current_path).to eq("/merchant/discounts")
+        expect(current_path).to eq("/merchant/discounts/new")
 
 
         expect(page).to have_content("name: [\"can't be blank\"]")
