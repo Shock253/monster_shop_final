@@ -38,8 +38,21 @@ RSpec.describe "Bulk discount index page" do
         expect(current_path).to eq("/merchant/discounts")
 
         within "#discount-#{discount1.id}" do
-          expect(page).to have_content("Family size discount")
+          expect(page).to have_content("Party size discount")
         end
+      end
+
+      it "if I put in invalid information into the form, I get a flash message telling me what went wrong" do
+        visit "/merchant/discounts/new"
+
+        fill_in 'Percent', with: "300"
+        fill_in 'Threshold', with: "yeet"
+        click_button 'Create Discount'
+        expect(current_path).to eq("/merchant/discounts")
+
+
+        expect(page).to have_content("percent: [\"must be less than 100\"]")
+        expect(page).to have_content("threshold: [\"is not a number\"]")
       end
     end
   end
