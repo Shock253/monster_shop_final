@@ -167,6 +167,30 @@ RSpec.describe 'Cart Show Page' do
         expect(page).to_not have_content("#{@hippo.name}")
         expect(page).to have_content("Cart: 0")
       end
+
+      it "if I add enough items in my cart to reach the threshold of a discount,
+      I see that discount next to the price on the order" do
+        discount1 = @brian.discounts.create!(name: "Family size discount", threshold: 10, percent: 10)
+        discount2 = @brian.discounts.create!(name: "Shipping supply discount", threshold: 500, percent: 20)
+
+        10.times do
+          visit item_path(@hippo)
+          click_button 'Add to Cart'
+        end
+
+        visit '/cart'
+
+        within "#item-#{@hippo.id}" do
+          discounted_percent = (100.0 - discount1.percent)/100.0
+          expect(page).to have_content("Price: $#{(@hippo.price * discounted_percent)}0 (-#{discount1.percent}%)")
+        end
+      end
     end
   end
 end
+
+# **User Story 6: Shopping Cart Display**
+# - As a Regular user
+# - When I add enough items to my cart to cross that merchant's threshold for a discount
+# - I see a new subtotal price under the item
+# - And I see a number showing the difference in price with the discount's percentage
